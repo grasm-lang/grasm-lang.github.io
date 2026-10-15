@@ -1,0 +1,9 @@
+site/vendor/ contains third-party JavaScript, vendored rather than fetched so
+the site makes no external request and renders under a strict content policy.
+
+  motion.js
+      Motion — MIT — Copyright Framer B.V.
+  lottie.js
+      lottie-web (lottie_light) — MIT — Copyright Airbnb
+
+Neither is modified.

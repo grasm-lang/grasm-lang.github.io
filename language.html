@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Language reference</title>
+<meta name="description" content="Syntax and type-system reference.">
+<link rel="stylesheet" href="style.css">
+<script src="vendor/motion.js" defer></script>
+<script src="vendor/lottie.js" defer></script>
+<script type="module" src="app.js"></script>
+</head><body data-page="language">
+<header class="topbar">
+  <a class="brand" href="index.html"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 7.5v9L12 21l8-4.5v-9L12 3Z"/><path d="M12 12 4 7.5M12 12l8-4.5M12 12v9"/></svg><span>grasm</span></a>
+  <span class="ver">v1.0.0</span>
+  <nav>
+    <a href="different.html">Why</a>
+    <a href="start.html">Docs</a>
+    <a href="syntax.html">Syntax</a>
+    <a href="security.html">Security</a>
+    <a href="achieved.html">Scorecard</a>
+    <a href="status.html">Status</a>
+  </nav>
+</header>
+<div class="frame">
+<nav class="rail">
+<a class="mark" href="index.html"><b>grasm</b><span>a systems language</span></a>
+<h2>Start</h2>
+<a href="different.html">Why Grasm</a>
+<a href="start.html">Getting started</a>
+<a href="install.html">Install</a>
+<a href="playground.html">Playground</a>
+<h2>Learn</h2>
+<a href="tutorial.html">Tutorial</a>
+<a href="tour.html">Tour</a>
+<a href="effects.html">Effects</a>
+<a href="tiers.html">Ownership</a>
+<a href="errors.html">Errors</a>
+<a href="concurrency.html">Concurrency</a>
+<a href="security.html">Security</a>
+<h2>Reference</h2>
+<a href="syntax.html">Syntax</a>
+<a href="language.html" aria-current="page">Language</a>
+<a href="library.html">Library</a>
+<a href="packages.html">Packages</a>
+<a href="spec.html">Specification</a>
+<a href="architecture.html">Architecture</a>
+<h2>More</h2>
+<a href="examples.html">Examples</a>
+<a href="achieved.html">Scorecard</a>
+<a href="performance.html">Performance</a>
+<a href="about.html">About</a>
+<a href="status.html">Status</a>
+<a href="roadmap.html">Roadmap</a>
+</nav>
+<main>
+
+<p class="eyebrow">Reference</p>
+<h1>Language reference</h1>
+<p class="lede">The normative text is <code>spec/</code>. This is the working
+summary.</p>
+
+<h2>Declarations</h2>
+<div class="scroll"><table>
+<tr><th>Form</th><th>Means</th></tr>
+<tr><td><code>fn name(args) -&gt; T ! E / {row}</code></td><td>A function. Return, failure and effects are all part of the type.</td></tr>
+<tr><td><code>type N = { f: T }</code></td><td>A struct.</td></tr>
+<tr><td><code>type N = | A | B(v: T)</code></td><td>A sum, with or without payloads.</td></tr>
+<tr><td><code>type N[T] = …</code></td><td>A generic type: a family, one member per use.</td></tr>
+<tr><td><code>type N = T</code></td><td>An alias.</td></tr>
+<tr><td><code>effect N { fn op() -&gt; T }</code></td><td>An effect and its operations.</td></tr>
+<tr><td><code>import path</code></td><td>Brings a module in.</td></tr>
+<tr><td><code>pub</code></td><td>Exports a declaration from its module.</td></tr>
+<tr><td><code>extern fn c_name(...)</code></td><td>A C function. Calling it performs <code>unsafe</code>.</td></tr>
+<tr><td><code>test "name" { }</code></td><td>A test, beside the code.</td></tr>
+<tr><td><code>bench "name" { }</code></td><td>A benchmark.</td></tr>
+</table></div>
+
+<h2>Operators</h2>
+<div class="scroll"><table>
+<tr><th>Operator</th><th>On</th></tr>
+<tr><td><code>+ - * / %</code></td><td><code>i64</code> and <code>f64</code>. <code>+</code> also concatenates a <code>str</code> or a list.</td></tr>
+<tr><td><code>^</code></td><td>Exponentiation — not bitwise xor. A negative integer exponent panics; write it in floats.</td></tr>
+<tr><td><code>== !=</code></td><td>Any two values of one type, structurally.</td></tr>
+<tr><td><code>&lt; &lt;= &gt; &gt;=</code></td><td><code>i64</code>, <code>f64</code>, <code>str</code>, and tuples whose every component is ordered.</td></tr>
+<tr><td><code>and or not</code></td><td>Booleans. <code>and</code> and <code>or</code> short-circuit.</td></tr>
+<tr><td><code>??</code></td><td>Opens an <code>Option</code> or a fallible with a default. The right side is lazy.</td></tr>
+<tr><td><code>|&gt;</code></td><td>Pipes a value into a call.</td></tr>
+<tr><td><code>..</code> <code>..=</code></td><td>A range, exclusive or inclusive.</td></tr>
+</table></div>
+
+<h2>Strings</h2>
+<p>Interpolation is <code>"{expr}"</code>, and the expression inside needs no
+escaping for its own quotes. <code>len()</code> counts characters;
+<code>byte_len()</code> counts bytes.</p>
+
+<h2>Where the truth is</h2>
+<p>253 numbered clauses across <code>spec/</code>, each with a conformance
+program that runs in the test suite. <a href="spec.html">More on the
+specification.</a></p>
+
+<footer>
+Grasm — four engines, one answer. Counts here are computed from the
+repository as the page is written; measurements are read from the document
+that recorded them.
+<a href="achieved.html">Scorecard</a> ·
+<a href="performance.html">Performance</a> ·
+<a href="status.html">Status</a> ·
+<a href="spec.html">Specification</a> ·
+<a href="roadmap.html">Roadmap</a>
+</footer>
+</main>
+</div>
+</body></html>

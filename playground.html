@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Playground</title>
+<meta name="description" content="Run Grasm in your browser.">
+<link rel="stylesheet" href="style.css">
+<script src="vendor/motion.js" defer></script>
+<script src="vendor/lottie.js" defer></script>
+<script type="module" src="app.js"></script>
+</head><body data-page="playground">
+<header class="topbar">
+  <a class="brand" href="index.html"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 7.5v9L12 21l8-4.5v-9L12 3Z"/><path d="M12 12 4 7.5M12 12l8-4.5M12 12v9"/></svg><span>grasm</span></a>
+  <span class="ver">v1.0.0</span>
+  <nav>
+    <a href="different.html">Why</a>
+    <a href="start.html">Docs</a>
+    <a href="syntax.html">Syntax</a>
+    <a href="security.html">Security</a>
+    <a href="achieved.html">Scorecard</a>
+    <a href="status.html">Status</a>
+  </nav>
+</header>
+<div class="frame">
+<nav class="rail">
+<a class="mark" href="index.html"><b>grasm</b><span>a systems language</span></a>
+<h2>Start</h2>
+<a href="different.html">Why Grasm</a>
+<a href="start.html">Getting started</a>
+<a href="install.html">Install</a>
+<a href="playground.html" aria-current="page">Playground</a>
+<h2>Learn</h2>
+<a href="tutorial.html">Tutorial</a>
+<a href="tour.html">Tour</a>
+<a href="effects.html">Effects</a>
+<a href="tiers.html">Ownership</a>
+<a href="errors.html">Errors</a>
+<a href="concurrency.html">Concurrency</a>
+<a href="security.html">Security</a>
+<h2>Reference</h2>
+<a href="syntax.html">Syntax</a>
+<a href="language.html">Language</a>
+<a href="library.html">Library</a>
+<a href="packages.html">Packages</a>
+<a href="spec.html">Specification</a>
+<a href="architecture.html">Architecture</a>
+<h2>More</h2>
+<a href="examples.html">Examples</a>
+<a href="achieved.html">Scorecard</a>
+<a href="performance.html">Performance</a>
+<a href="about.html">About</a>
+<a href="status.html">Status</a>
+<a href="roadmap.html">Roadmap</a>
+</nav>
+<main>
+
+<p class="eyebrow">Start</p>
+<h1>Playground</h1>
+<p class="lede">Grasm compiles to <code>wasm32</code>, so the language runs in a
+browser with no server behind it.</p>
+
+<p>The engine below is the reference interpreter — the same one
+<code>grasm run</code> uses — built for <code>wasm32</code> and held to the other
+engines by <code>scripts/wasmtest.sh</code>. Your program never leaves this tab.
+The examples are the files in <code>examples/</code>, read when this page was
+generated.</p>
+
+<section class="pg" id="playground" aria-label="Playground">
+  <div class="pg-bar">
+    <label class="pg-pick">Example
+      <select id="pg-example" disabled></select>
+    </label>
+    <span class="pg-engine" id="pg-engine">loading the engine…</span>
+    <button class="btn" id="pg-run" type="button" disabled>Run</button>
+  </div>
+  <textarea id="pg-src" class="pg-src" spellcheck="false" autocapitalize="off"
+    autocomplete="off" aria-label="Program source"></textarea>
+  <div class="pg-out-head">
+    <span>Output</span>
+    <span class="pg-status" id="pg-status" role="status"></span>
+  </div>
+  <pre class="pg-out" id="pg-out" aria-live="polite">Loading…</pre>
+</section>
+<noscript><div class="note">The playground needs JavaScript and WebAssembly.
+The instructions below run the same engine locally.</div></noscript>
+<script type="module" src="playground.js"></script>
+
+<h2>Running it locally</h2>
+<p>The wasm build and a host page live in the repository. Serve the directory
+and open it:</p><pre><code>cargo build <span class="op">-</span><span class="op">-</span>release <span class="op">-</span><span class="op">-</span>target wasm32<span class="op">-</span>unknown<span class="op">-</span>unknown <span class="op">-</span>p grasm_wasm
+cp target<span class="op">/</span>wasm32<span class="op">-</span>unknown<span class="op">-</span>unknown<span class="op">/</span>release<span class="op">/</span>grasm_wasm<span class="op">.</span>wasm <span class="ty">ProjectGold</span><span class="op">/</span>web<span class="op">/</span>grasm<span class="op">.</span>wasm
+
+python3 <span class="op">-</span>m http<span class="op">.</span>server <span class="op">-</span>d <span class="ty">ProjectGold</span><span class="op">/</span>web</code></pre>
+<p>That page runs the corpus: pick a program, and it executes in the tab.</p>
+<p>10 of the programs under <code>ProjectGold/</code> are browser applications built this way, and they are the ones with a page beside them: a fullstack counter, user registration, a voting app, a blog dashboard, a markdown editor, an upload gallery, a chat router, a collaborative todo list, a SPA router and realtime analytics.</p>
+
+
+<h2>What the browser build can and cannot do</h2>
+<p>415 programs produce identical output in wasm, which is every program in the corpus, and both
+figures below come from a run on 15 October 2026. The other
+96 are skipped for a reason the host cannot supply, and each names
+it: a filesystem, a socket, a process, threads, or a stack deep enough for the
+recursion limit the specification promises.</p>
+
+<p>In this page the missing facilities refuse the same way: a program that
+opens a file or a socket gets the ordinary error back, and <code>par_map</code>
+runs on one core with the same answer.</p>
+
+<footer>
+Grasm — four engines, one answer. Counts here are computed from the
+repository as the page is written; measurements are read from the document
+that recorded them.
+<a href="achieved.html">Scorecard</a> ·
+<a href="performance.html">Performance</a> ·
+<a href="status.html">Status</a> ·
+<a href="spec.html">Specification</a> ·
+<a href="roadmap.html">Roadmap</a>
+</footer>
+</main>
+</div>
+</body></html>

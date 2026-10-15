@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Specification</title>
+<meta name="description" content="253 numbered clauses, each with a conformance program.">
+<link rel="stylesheet" href="style.css">
+<script src="vendor/motion.js" defer></script>
+<script src="vendor/lottie.js" defer></script>
+<script type="module" src="app.js"></script>
+</head><body data-page="spec">
+<header class="topbar">
+  <a class="brand" href="index.html"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 7.5v9L12 21l8-4.5v-9L12 3Z"/><path d="M12 12 4 7.5M12 12l8-4.5M12 12v9"/></svg><span>grasm</span></a>
+  <span class="ver">v1.0.0</span>
+  <nav>
+    <a href="different.html">Why</a>
+    <a href="start.html">Docs</a>
+    <a href="syntax.html">Syntax</a>
+    <a href="security.html">Security</a>
+    <a href="achieved.html">Scorecard</a>
+    <a href="status.html">Status</a>
+  </nav>
+</header>
+<div class="frame">
+<nav class="rail">
+<a class="mark" href="index.html"><b>grasm</b><span>a systems language</span></a>
+<h2>Start</h2>
+<a href="different.html">Why Grasm</a>
+<a href="start.html">Getting started</a>
+<a href="install.html">Install</a>
+<a href="playground.html">Playground</a>
+<h2>Learn</h2>
+<a href="tutorial.html">Tutorial</a>
+<a href="tour.html">Tour</a>
+<a href="effects.html">Effects</a>
+<a href="tiers.html">Ownership</a>
+<a href="errors.html">Errors</a>
+<a href="concurrency.html">Concurrency</a>
+<a href="security.html">Security</a>
+<h2>Reference</h2>
+<a href="syntax.html">Syntax</a>
+<a href="language.html">Language</a>
+<a href="library.html">Library</a>
+<a href="packages.html">Packages</a>
+<a href="spec.html" aria-current="page">Specification</a>
+<a href="architecture.html">Architecture</a>
+<h2>More</h2>
+<a href="examples.html">Examples</a>
+<a href="achieved.html">Scorecard</a>
+<a href="performance.html">Performance</a>
+<a href="about.html">About</a>
+<a href="status.html">Status</a>
+<a href="roadmap.html">Roadmap</a>
+</nav>
+<main>
+
+<p class="eyebrow">Reference</p>
+<h1>Specification</h1>
+<p class="lede">The language is defined by numbered clauses, each with a program
+that exercises it, and each filed at a stability level that says whether it may
+change.</p>
+
+<div class="figures">
+  <div class="fig"><b>253</b><span>clauses</span></div>
+  <div class="fig"><b>71</b><span>pages, against a 50-page cap</span></div>
+  <div class="fig"><b>205</b><span>laws checked against arithmetic</span></div>
+</div>
+
+<h2>How a clause works</h2>
+<p>A clause is a paragraph with a tag: <code>[T-REF-VALUE]</code>,
+<code>[E-SPAWN-ORDER]</code>, <code>[L-LIB-BITS]</code>. Every one has a program
+under <code>spec/conformance/</code> tagged with it, and the test suite fails if
+a clause has no program, if a program has no clause, or if a clause is filed
+under a stability heading that disagrees with its own level.</p>
+
+<h2>Stability</h2>
+<div class="scroll"><table>
+<tr><th>Level</th><th>Means</th></tr>
+<tr><td>Stable</td><td>It will not change under you.</td></tr>
+<tr><td>Provisional</td><td>It works and it may still move.</td></tr>
+<tr><td>Experimental</td><td>Expect it to change.</td></tr>
+</table></div>
+
+<h2>Three budgets the specification sets itself, and misses</h2>
+<p>§19.2 of the specification states a budget for its own size and for the
+size of the reference interpreter, and records what each one is today. None of
+the three is met, and the site had never shown any of them — the page led
+with <b>71</b> labelled <em>the cap</em>, when 50 is the
+cap and 71 is 42% past it. This is the table as
+<code>spec/core.md</code> records it:</p>
+<div class="scroll"><table><thead><tr><th>Budget</th><th>§19.2 target</th><th>Today</th></tr></thead><tbody><tr><td>Core constructs</td><td>≤ 30</td><td><strong>37</strong></td></tr><tr><td>Reference interpreter</td><td>≤ 5,000 lines</td><td><strong>9046</strong></td></tr><tr><td>Specification</td><td>≤ 50 pages</td><td><strong>~71 pages</strong></td></tr></tbody></table></div>
+<p>The specification's own note on them is the useful part: <em>the
+specification's is the binding one — a new clause is paid for out of
+prose.</em> A language that cannot be read is not specified by having been
+written down, and 37 core constructs against a budget of
+30 is the number that decides whether the next feature gets
+one.</p>
+
+<h2>Why there is also a law for most of them</h2>
+<p>A conformance program records what a clause says the output is. Where the
+clause and the implementation were written together — which, for a young
+language, is most of them — both can be wrong together, and the program agrees
+with them.</p>
+<p>So the behavioural clauses in scope also have a <em>law</em>: one of
+205 relations checked against
+arithmetic, not against a recorded string. <code>rev</code> puts the last
+element first. <code>a / b * b + a % b == a</code>. A released slot is dead
+through every reference to it. A clause in scope with no law fails the gate by
+name.</p>
+<p class="note">How many laws there are is a count, taken from <code>scripts/fuzz_laws.py</code> as this page is written. Whether they <em>hold</em> needs a run, and the last recorded one checked <b>205</b> of them with none broken, on 15 October 2026 — a green run of that gate checks every law it defines, so the gap between the two figures is laws added since. The page used to show only the run's figure, which is how it said 197 while the file defined 205.</p>
+
+<h2>The page budget</h2>
+<p>The specification is capped at seventy pages and the test suite enforces it.
+When a clause was added recently and the file went one line over, the clause was
+made shorter rather than the cap raised. A specification nobody finishes reading
+is one nobody checks the implementation against.</p>
+
+<footer>
+Grasm — four engines, one answer. Counts here are computed from the
+repository as the page is written; measurements are read from the document
+that recorded them.
+<a href="achieved.html">Scorecard</a> ·
+<a href="performance.html">Performance</a> ·
+<a href="status.html">Status</a> ·
+<a href="spec.html">Specification</a> ·
+<a href="roadmap.html">Roadmap</a>
+</footer>
+</main>
+</div>
+</body></html>

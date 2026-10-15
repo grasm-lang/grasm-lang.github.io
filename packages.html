@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Packages</title>
+<meta name="description" content="Manifests, lockfiles, and the capability ceiling.">
+<link rel="stylesheet" href="style.css">
+<script src="vendor/motion.js" defer></script>
+<script src="vendor/lottie.js" defer></script>
+<script type="module" src="app.js"></script>
+</head><body data-page="packages">
+<header class="topbar">
+  <a class="brand" href="index.html"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 7.5v9L12 21l8-4.5v-9L12 3Z"/><path d="M12 12 4 7.5M12 12l8-4.5M12 12v9"/></svg><span>grasm</span></a>
+  <span class="ver">v1.0.0</span>
+  <nav>
+    <a href="different.html">Why</a>
+    <a href="start.html">Docs</a>
+    <a href="syntax.html">Syntax</a>
+    <a href="security.html">Security</a>
+    <a href="achieved.html">Scorecard</a>
+    <a href="status.html">Status</a>
+  </nav>
+</header>
+<div class="frame">
+<nav class="rail">
+<a class="mark" href="index.html"><b>grasm</b><span>a systems language</span></a>
+<h2>Start</h2>
+<a href="different.html">Why Grasm</a>
+<a href="start.html">Getting started</a>
+<a href="install.html">Install</a>
+<a href="playground.html">Playground</a>
+<h2>Learn</h2>
+<a href="tutorial.html">Tutorial</a>
+<a href="tour.html">Tour</a>
+<a href="effects.html">Effects</a>
+<a href="tiers.html">Ownership</a>
+<a href="errors.html">Errors</a>
+<a href="concurrency.html">Concurrency</a>
+<a href="security.html">Security</a>
+<h2>Reference</h2>
+<a href="syntax.html">Syntax</a>
+<a href="language.html">Language</a>
+<a href="library.html">Library</a>
+<a href="packages.html" aria-current="page">Packages</a>
+<a href="spec.html">Specification</a>
+<a href="architecture.html">Architecture</a>
+<h2>More</h2>
+<a href="examples.html">Examples</a>
+<a href="achieved.html">Scorecard</a>
+<a href="performance.html">Performance</a>
+<a href="about.html">About</a>
+<a href="status.html">Status</a>
+<a href="roadmap.html">Roadmap</a>
+</nav>
+<main>
+
+<p class="eyebrow">Reference</p>
+<h1>Packages</h1>
+<p class="lede">A manifest, a resolver, a lockfile — and a ceiling on what a
+dependency may do, checked at compile time in every consumer.</p>
+
+<h2>A manifest</h2><pre><code><span class="op">[</span>package<span class="op">]</span>
+name <span class="op">=</span> <span class="st">"ecommerce_cart"</span>
+version <span class="op">=</span> <span class="st">"1.0.0"</span>
+entry <span class="op">=</span> <span class="st">"main.gr"</span>
+capabilities <span class="op">=</span> <span class="op">[</span><span class="st">"io"</span><span class="op">,</span> <span class="st">"net"</span><span class="op">]</span>
+
+<span class="op">[</span>dependencies<span class="op">.</span>json<span class="op">]</span>
+path <span class="op">=</span> <span class="st">"../../packages/json"</span>
+version <span class="op">=</span> <span class="st">"^1.0.0"</span></code></pre>
+
+<h2>The ceiling</h2>
+<p><code>capabilities</code> is the set of effects this package may perform.
+Effects are inferred from source, so the claim is checked rather than trusted. A
+dependency that starts reading files without declaring <code>io</code> fails to
+build — and it fails in <em>your</em> build, not silently in theirs.</p>
+<p>This is the part of the package system worth having. Version resolution is
+plumbing every language has; a supply chain where a dependency's reach is a
+compile-time fact is not.</p>
+
+<h2>Commands</h2><pre><code>grasm deps            # resolve<span class="op">,</span> check ceilings<span class="op">,</span> write grasm<span class="op">.</span>lock
+grasm deps <span class="op">-</span><span class="op">-</span>locked   # fail rather than update the lockfile</code></pre>
+
+<h2>What ships today</h2>
+<p>651 libraries, all written inside this repository because there
+is no registry to get one from. The table below is a sample of them — the
+ones where the capability column says something worth reading.</p>
+<div class="scroll"><table>
+<tr><th>Package</th><th>Capabilities</th><th>What it is</th></tr>
+<tr><td><code>http</code></td><td><i>none</i></td><td>Requests, responses, routing with <code>:param</code> and <code>*</code> segments, percent decoding, HTML escaping.</td></tr>
+<tr><td><code>http_server</code></td><td><code>io</code>, <code>net</code></td><td>The accept loop, and many conversations on one thread. Depends on <code>http</code>.</td></tr>
+<tr><td><code>http_client</code></td><td><code>net</code></td><td>Dials, sends what <code>http</code> composed, reads until the declared frame arrives. Depends on <code>http</code>.</td></tr>
+<tr><td><code>json</code></td><td><i>none</i></td><td>Parse, render, reach into a document, build one. Six programs in <code>ProjectGold/</code> depend on it.</td></tr>
+<tr><td><code>bytes_codec</code></td><td><i>none</i></td><td>Hex, base64, url-safe, constant-time compare.</td></tr>
+<tr><td><code>time</code></td><td><i>none</i></td><td>Civil calendar, ISO-8601, durations. The clock is a parameter.</td></tr>
+<tr><td><code>random</code></td><td><i>none</i></td><td>Seeded generator, uniform without modulo bias, shuffle.</td></tr>
+<tr><td><code>uuid</code></td><td><i>none</i></td><td>v4 and v7. The entropy is a parameter.</td></tr>
+<tr><td><code>path</code></td><td><i>none</i></td><td>Join, normalise, split, containment. Touches no disk.</td></tr>
+<tr><td><code>url</code></td><td><i>none</i></td><td>Parse, build, resolve, percent code, query strings.</td></tr>
+<tr><td><code>log</code></td><td><code>io</code>, <code>Log</code></td><td>Logging as an <b>effect</b>: a library that logs declares <code>Log</code>, not <code>io</code>.</td></tr>
+<tr><td><code>csv</code></td><td><i>none</i></td><td>Quoting, embedded newlines, headers, any separator.</td></tr>
+<tr><td><code>cli</code></td><td><i>none</i></td><td>Flags, bundles, subcommands, <code>--</code>, a generated help page.</td></tr>
+<tr><td><code>testing</code></td><td><i>none</i></td><td>Cases as values, table-driven suites, a golden diff that names the line and column.</td></tr>
+<tr><td><code>toml</code></td><td><i>none</i></td><td>Tables, arrays, inline tables, reached by dotted path.</td></tr>
+<tr><td><code>resilience</code></td><td><i>none</i></td><td>Backoff with full jitter, circuit breaker, token bucket, deadlines — the clock is a parameter.</td></tr>
+<tr><td><code>cache</code></td><td><i>none</i></td><td><code>Cache[V]</code>, least-recently-used with an expiry.</td></tr>
+<tr><td><code>crypto_hash</code></td><td><i>none</i></td><td>SHA-256, HMAC-SHA-256, PBKDF2, constant-time compare — every digest checked against FIPS 180-4, RFC 4231 and RFC 6070.</td></tr>
+<tr><td><code>regex</code></td><td><i>none</i></td><td>A Thompson machine, so matching is linear in the input for every pattern — <code>(a+)+b</code> against thirty <code>a</code>s returns at once.</td></tr>
+<tr><td><code>fs</code></td><td><code>io</code></td><td>Walk, glob, copy, temporary paths. The arithmetic half is <code>path</code>, which declares nothing.</td></tr>
+<tr><td><code>jwt</code></td><td><i>none</i></td><td>HS256. The algorithm comes from the caller, never the token — so <code>alg: none</code> is refused because it disagrees, not by a special case.</td></tr>
+<tr><td><code>cors</code></td><td><i>none</i></td><td>A request in, the headers a response needs out.</td></tr>
+<tr><td><code>dotenv</code></td><td><code>io</code></td><td><code>.env</code> files. It answers a map and never touches the process environment.</td></tr>
+<tr><td><code>sanitize</code></td><td><i>none</i></td><td>Escaping by <em>destination</em> — HTML text, an attribute, a script block, a URL, a shell argument, a header. There is no general <code>escape</code>, because there is no such thing.</td></tr>
+<tr><td><code>metrics</code></td><td><code>Metric</code></td><td>Counters, gauges, histograms and the Prometheus text format — the registry is an effect, so a library that counts declares <code>Metric</code> and not <code>io</code>.</td></tr>
+<tr><td><code>errors</code></td><td><i>none</i></td><td>A failure carrying its cause, its place and its fields. Grasm has no captured backtrace, so every link is one somebody wrote — which is the work, and is why nothing is lost.</td></tr>
+<tr><td><code>trace</code></td><td><code>Trace</code></td><td>Spans and W3C <code>traceparent</code>, as an effect. An all-zero trace id is refused, since a receiver that accepts one joins every unrelated request into a single trace.</td></tr>
+<tr><td><code>redis</code></td><td><code>net</code></td><td>RESP2 and RESP3 both — a client that reads only one refuses half the servers it meets. The encoder and decoder are pure, so the demo drives them with bytes and never opens a socket.</td></tr>
+<tr><td><code>websocket</code></td><td><i>none</i></td><td>The upgrade handshake (checked against RFC 6455's own example) and the frame format. A frame's masking is checked in both directions, because a server that accepts an unmasked one sits behind a proxy that can be poisoned. <code>ws://</code> only — there is no TLS.</td></tr>
+<tr><td><code>password</code></td><td><i>none</i></td><td>PBKDF2-HMAC-SHA256. The stored form carries its own algorithm and cost, so a file written today can be verified after both change.</td></tr>
+<tr><td><code>protobuf</code></td><td><i>none</i></td><td>The wire format: varints, zigzag, packed and nested fields. A message without its schema still reads, which is what makes a proxy possible. <b>Not gRPC</b> — that needs HTTP/2 and TLS.</td></tr>
+<tr><td><code>postgres</code></td><td><code>net</code></td><td>The v3 wire protocol and <b>SCRAM-SHA-256</b>, checked against RFC 7677's own vector. No TLS, so a trusted network or a local socket.</td></tr>
+<tr><td><code>xml</code></td><td><i>none</i></td><td>Parse and render. <b>No DTD and no external entities, ever</b> — that is what XXE is, and a first release does not need it. Which is also why this can declare nothing and mean it.</td></tr>
+<tr><td><code>oauth2</code></td><td><i>none</i></td><td>The authorisation-code flow with PKCE (checked against RFC 7636's vector) and client credentials. PKCE and <code>state</code> are not optional here.</td></tr>
+</table></div>
+<p><strong>555 of the 651 libraries declare
+<em>nothing</em>.</strong> Only 96 ask for any capability
+at all. That is the pattern the whole design is for, and the number is counted
+from the manifests rather than asserted: reach is
+split from computation, so a program that joins paths, formats a date or
+builds a URL acquires no capability by doing so — and where a library really
+does need the world, it asks for it as an effect the consumer supplies, which
+is what <code>log</code> demonstrates.</p>
+<p>They are three packages because <code>http</code> <em>cannot</em> open a
+socket, and that is checked rather than claimed: its manifest declares no
+capability, effects are inferred from its source, and a version of it that
+started dialling out would fail to build in every consumer. So a program can
+parse and route HTTP while remaining provably unable to reach the network, and
+a program that only builds requests never acquires the ability to send them. In
+every other language, depending on the HTTP library means depending on
+something that can.</p>
+
+<h2>Where packages come from</h2>
+<p>Two sources work today: a <code>path</code> dependency, and a local registry
+under <code>.grasm/registry</code> (or wherever <code>GRASM_REGISTRY</code>
+points). Both resolve, lock and check ceilings.</p>
+
+<div class="note"><b>There is no remote registry.</b> Nothing fetches, publishes
+or verifies over a network yet, and there are no third-party packages to fetch.
+Both are on the <a href="roadmap.html">roadmap</a>, and they are the largest
+thing standing between this language and ordinary use.</div>
+
+<footer>
+Grasm — four engines, one answer. Counts here are computed from the
+repository as the page is written; measurements are read from the document
+that recorded them.
+<a href="achieved.html">Scorecard</a> ·
+<a href="performance.html">Performance</a> ·
+<a href="status.html">Status</a> ·
+<a href="spec.html">Specification</a> ·
+<a href="roadmap.html">Roadmap</a>
+</footer>
+</main>
+</div>
+</body></html>
